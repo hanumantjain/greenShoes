@@ -1,21 +1,45 @@
 import React, { useState } from 'react'
 import view from '../assets/view.png'
 import hide from '../assets/hide.png'
+import axios from 'axios'
 
 const AdminLogin = ({ onLogin }) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [error, setError] = useState('')
     const [showPassword, setShowPassword] = useState(false)
+    const [resultMessage, setResultMessage] = useState('')
 
-    const handleSubmit = (e) => {
+    // const handleSubmit = (e) => {
+    //     e.preventDefault()
+
+    //     axios.post('http://localhost:3001/admin', { username, password })
+    //     .then(result => {
+    //         console.log(result)
+    //         if(result.data === 'Success') {
+    //             onLogin(true)
+    //             setResultMessage('Login successful!')
+    //         }else{
+    //             setResultMessage(result.data)
+    //         }
+    //     })
+    //     .catch(err => console.log(err))
+    //     setUsername('')
+    //     setPassword('')
+    // }
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
 
-        if(username === 'hanumant' && password === '1234'){
+        try{
+            const response = await axios.post('http://localhost:3001/admin', { username, password })
+            console.log(response)
             onLogin(true)
-        }else{
-            setError('Invalid credentials')
+            setResultMessage(response.data.message)
+        }catch (error) {
+            setResultMessage(error.response.data.message)
         }
+        setUsername('')
+        setPassword('')
     }
 
     const handleShowPassword = () =>{
@@ -27,7 +51,7 @@ const AdminLogin = ({ onLogin }) => {
             <div className=''>
                 Admin Login
             </div>
-            {error && <p className='text-red-500'>{error}</p>}
+            {resultMessage && <p className='text-red-500'>{resultMessage}</p>}
             <form onSubmit={handleSubmit} className='flex flex-col gap-6'>
                 <input 
                     type='text'
@@ -35,6 +59,7 @@ const AdminLogin = ({ onLogin }) => {
                     placeholder='Enter your email'
                     className='border border-black h-8 p-1 rounded w-full'
                     onChange={(e) => setUsername(e.target.value)}
+                    required
                 />
                 <div className='relative'>
                     <input 
@@ -43,6 +68,7 @@ const AdminLogin = ({ onLogin }) => {
                         placeholder='Enter your password'
                         className='border border-black h-8 p-1 rounded w-full'
                         onChange={(e) => setPassword(e.target.value)}
+                        required
                     />
                     <div className='absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer' onClick={handleShowPassword}>
                         {showPassword ? 
