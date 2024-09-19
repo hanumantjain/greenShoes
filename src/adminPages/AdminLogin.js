@@ -8,30 +8,13 @@ const AdminLogin = ({ onLogin }) => {
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [resultMessage, setResultMessage] = useState('')
-
-    // const handleSubmit = (e) => {
-    //     e.preventDefault()
-
-    //     axios.post('http://localhost:3001/admin', { username, password })
-    //     .then(result => {
-    //         console.log(result)
-    //         if(result.data === 'Success') {
-    //             onLogin(true)
-    //             setResultMessage('Login successful!')
-    //         }else{
-    //             setResultMessage(result.data)
-    //         }
-    //     })
-    //     .catch(err => console.log(err))
-    //     setUsername('')
-    //     setPassword('')
-    // }
+    const backendBaseUrl = process.env.REACT_APP_BACKEND_BASEURL
 
     const handleSubmit = async (e) => {
         e.preventDefault()
 
         try{
-            const response = await axios.post('http://localhost:3001/admin', { username, password })
+            const response = await axios.post(`${backendBaseUrl}/admin`, { username, password })
             console.log(response)
             onLogin(true)
             setResultMessage(response.data.message)

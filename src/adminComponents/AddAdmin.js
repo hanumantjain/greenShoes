@@ -6,12 +6,14 @@ const AddAdmin = () => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [message, setMessage] = useState('')
+    const backendBaseUrl = process.env.REACT_APP_BACKEND_BASEURL
+
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         setMessage('')
         try {
-            const response = await axios.post('http://localhost:3001/adminHome',{name, username, password})
+            const response = await axios.post(`${backendBaseUrl}/adminHome`,{name, username, password})
             setMessage(response.data.message)
         }catch (error){
             setMessage(error.response.data.message)
